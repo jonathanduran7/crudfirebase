@@ -5,6 +5,8 @@ function App() {
 
     const [tareas,setTareas] = React.useState([])
     const [tarea,setTarea] = React.useState('')
+    const [modoEdicion, setModoEdicion] = React.useState(false)
+    const [id,setId] = React.useState('')
 
     React.useEffect(()=>{
 
@@ -62,6 +64,16 @@ function App() {
       }
     }
 
+    const activarEdicion = (item) =>{
+      setModoEdicion(true)
+      setTarea(item.name)
+      setId(item.id)
+    }
+
+    const editar = async (e) =>{
+      e.preventDefault()
+    }
+
     return (
     <div className="container mt-3">
       <div className="row">
@@ -75,7 +87,9 @@ function App() {
                   onClick={()=> eliminar(item.id)}>
                     Eliminar
                   </button>
-                  <button className="btn btn-warning btn-sm float-end">
+                  <button className="btn btn-warning btn-sm float-end"
+                  onClick={()=> activarEdicion(item)}
+                  >
                     Editar
                   </button>
                 </li>
@@ -84,8 +98,12 @@ function App() {
           </ul>
         </div>
         <div className="col-md-6">
-         <h2>Formulario</h2>
-         <form onSubmit={agregar}>
+         <h2>
+           {
+             modoEdicion ? 'Editar Tarea' : 'Agregar Tarea'
+           }
+         </h2>
+         <form onSubmit={modoEdicion ? editar : agregar}>
             <input 
               type="text"
               placeholder="Ingrese tarea"
@@ -94,9 +112,14 @@ function App() {
               value={tarea}
             />
             <button 
-            className='btn btn-dark'
-            type="submit">
-               Agregar
+            className={
+              modoEdicion ? 'btn btn-warning' : 'btn btn-dark'
+            }
+            type="submit"
+            >
+              {
+                modoEdicion ? 'Editar' : 'Agregar'
+              }
             </button>
           </form>
         </div>
