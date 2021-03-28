@@ -30,7 +30,25 @@ function App() {
         console.log('esta vacio')
         return
       }
-      console.log(tarea)
+      
+      try {
+        
+        const db = firebase.firestore()
+        const nuevaTarea = {
+          name: tarea,
+          fecha: Date.now()
+        }
+
+        const data = await db.collection('tareas').add(nuevaTarea)
+        setTarea('')
+        setTareas([
+          ...tareas, {...nuevaTarea, id: data.id}
+        ])
+
+      } catch (error) {
+        console.log(error)
+      }
+
     }
 
     return (
